@@ -15,13 +15,14 @@ dwu = dwu[!drop]
 library(dplyr)
 dwu %>% mutate_if(is.factor, as.character) -> dwu
 
-#Change all the suspicious values to NA
+#Change all the suspicious values to "unkown"
 library("MASS")
 dwu[dwu=="unknown" | dwu=="Unknown" | dwu=="Unknown Installer" | dwu=="-" | dwu==""] <- "unknown"
 dwu[dwu=="unknown"] <- "unknown"
 dwu[dwu=="Unknown"] <- "unknown"
 dwu[dwu=="Unknown Installer"] <- "unknown"
 dwu[dwu=="-"] <- "unknown"
+dwu[dwu=="other"] <- "unknown"
 head(dwu)
 
 #characters --> factors in order to do future analyses
@@ -62,10 +63,11 @@ export(merged, "C:/Users/Renel/Documents/School/DePaul/3. Winter 2017/CSC 424/Pr
 cleandata = read.csv("unknowns.csv")
 head(cleandata)
 
-class(cleandata$status_group2)
+#NOTE: CA requires that the categorical variables used have more than 2 levels, so for exploration,
+#we must use status_group (3 levels) instead of status_group2 (2 levels)
 
 #create a contingency table for the two nominal variables you want to compare:
-mytable <- with(cleandata, table(extraction_type_class, status_group2))
+mytable <- with(cleandata, table(extraction_type_class, status_group))
 mytable
 
 round(prop.table(mytable, 1), 2)  # Row Percentages
@@ -74,7 +76,7 @@ round(prop.table(mytable, 2), 2)  # Column Percentages
 library(ca)
 fit = ca(mytable)
 summary(fit)#value is kind of like variance; % is percent of correspondence captured
-#by that dimension; this give the error: Error in obj$rowcoord[, 1:K] : subscript out of bounds ????
+#by that dimension
 fit1 #instead of correspondence captured, they call it the principle inertias
 #(eigenvalues); the % tells you the percentage of the interita 
 #(variance/correspondance) that the dimensions (eigenvectors) account for. It also
@@ -86,3 +88,4 @@ mytable
 plot(fit, mass=T, contrib="absolute", 
      map="rowgreen", arrows=c(F, T)) #this gives you the arrows
 library(vcd)
+mosaic(extr_pay, shade=TRUE, legend=TRUE)
