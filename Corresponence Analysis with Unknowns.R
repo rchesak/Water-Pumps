@@ -79,7 +79,7 @@ summary(fit)#value is kind of like variance; % is percent of correspondence capt
 #by that dimension
 fit1 #instead of correspondence captured, they call it the principle inertias
 #(eigenvalues); the % tells you the percentage of the interita 
-#(variance/correspondance) that the dimensions (eigenvectors) account for. It also
+#(variance/correspondence) that the dimensions (eigenvectors) account for. It also
 #gives you the chi squared distances for the rows and the columns, which you want
 #to plot
 plot(fit)
